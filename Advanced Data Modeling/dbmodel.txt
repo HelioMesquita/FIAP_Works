@@ -1,0 +1,72 @@
+Table PessoaFisica {
+  cpf varchar [primary key]
+  name varchar
+  email varchar
+  telefone varchar
+  created_at timestamp
+  foto_url varchar
+  assinatura_digital varchar
+}
+
+Table PessoaJuridica {
+  cnpj varchar [primary key]
+  name varchar
+  email varchar
+  telefone varchar
+  created_at timestamp
+  foto_url varchar
+  assinatura_digital varchar
+}
+
+Table TipoCliente {
+  id integer [primary key]
+  tipo varchar
+}
+
+Table Cliente {
+  id integer [primary key]
+  tipo int [ref: > TipoCliente.id]
+  pessoa_fisica_cpf varchar [ref: > PessoaFisica.cpf]
+  pessoa_juridica_cnpj varchar [ref: > PessoaJuridica.cnpj]
+  saldo decimal
+}
+
+Table TipoTransacao {
+  id integer [primary key]
+  name varchar
+}
+
+Table Transacoes {
+  id integer [primary key]
+  origem_id int [ref: > Cliente.id]
+  destino_id int [ref: > Cliente.id]
+  tipo_transacao int [ref: > TipoTransacao.id]
+  valor decimal
+  data_hora timestamp
+}
+
+Table ProdutosCredito {
+  id integer [primary key]
+  nome varchar
+  taxa_de_juros decimal
+}
+
+Table ContratacoesCredito {
+  id integer [primary key]
+  cliente_id int [ref: > Cliente.id]
+  produto_id int [ref: > ProdutosCredito.id]
+  periodo_total int
+}
+
+Table RecomendacaoCreditoParaCliente {
+  id integer [primary key]
+  produto_recomendado int [ref: > ProdutosCredito.id]
+  cliente_id int [ref: > Cliente.id]
+  prioridade integer
+  localizacao int [ref: > LugarAnuncio.id]
+}
+
+Table LugarAnuncio {
+  id integer [primary key]
+  name varchar
+}
