@@ -14,25 +14,21 @@ mysql;
 CREATE DATABASE IF NOT EXISTS BlackWhiteGrayStore;
 USE BlackWhiteGrayStore;
 
--- Tabela Sizes
 CREATE TABLE IF NOT EXISTS sizes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     size VARCHAR(5) NOT NULL
 );
 
--- Tabela Colors
 CREATE TABLE IF NOT EXISTS colors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
--- Tabela Manufacturers
 CREATE TABLE IF NOT EXISTS manufacturers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(255) NOT NULL
 );
 
--- Tabela Clients
 CREATE TABLE IF NOT EXISTS clients (
     cpf CHAR(11) PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -42,7 +38,6 @@ CREATE TABLE IF NOT EXISTS clients (
     phone VARCHAR(20) NOT NULL
 );
 
--- Tabela Products (já com a coluna `price`)
 CREATE TABLE IF NOT EXISTS products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -56,7 +51,6 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (size) REFERENCES sizes(id)
 );
 
--- Tabela Orders
 CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_cpf CHAR(11),
@@ -66,7 +60,6 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (client_cpf) REFERENCES clients(cpf)
 );
 
--- Tabela OrderItems
 CREATE TABLE IF NOT EXISTS order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
