@@ -1,0 +1,203 @@
+#########################################################
+# Curso: Data Science and Artificial Intelligence
+# Disciplina: Data Architecture, Integration and Ingestion
+# Exercício: Site de Venda de Sapatos
+# Banco: MongoDB
+#########################################################
+
+######################################
+########## PARTE 1 - CRIAÇÃO #########
+######################################
+
+-- Acessar o banco
+mongosh;
+
+db = db.getSiblingDB("black_white_gray_store");
+
+-- Criar as collections
+db.createCollection("clients");
+db.createCollection("products");
+db.createCollection("orders");
+
+db.clients.createIndex({ cpf: 1 }, { unique: true, name: "idx_cpf" });
+db.products.createIndex({ model: 1 }, { unique: true, name: "idx_model" });
+db.orders.createIndex({ clientCpf: 1 }, { name: "idx_order_client" });
+
+######################################
+####### PARTE 2 - INSERÇÃO ###########
+######################################
+
+db.clients.insertMany([
+  { cpf: "40761839593", name: "Joana da Rosa", mail: "joana@gmail.com", address: "Rua das Flores, 123", zipCode: "01001000", phone: "11999999991" },
+  { cpf: "20765134934", name: "Leonardo Cunha", mail: "leonardo@gmail.com", address: "Av. Brasil, 456", zipCode: "02002000", phone: "11999999992" },
+  { cpf: "54096782300", name: "Erick Novaes", mail: "erick@gmail.com", address: "Rua das Palmeiras, 789", zipCode: "03003000", phone: "11999999993" },
+  { cpf: "75480316966", name: "Raquel Nunes", mail: "raquel@gmail.com", address: "Av. Paulista, 1000", zipCode: "04004000", phone: "11999999994" },
+  { cpf: "96245731070", name: "Maria Cecília", mail: "maria@gmail.com", address: "Rua Vitória, 321", zipCode: "05005000", phone: "11999999995" },
+  { cpf: "81395720479", name: "Davi Lucas", mail: "davi@gmail.com", address: "Rua São José, 654", zipCode: "06006000", phone: "11999999996" },
+  { cpf: "79605132443", name: "Yasmin da Cruz", mail: "yasmin@gmail.com", address: "Av. Central, 987", zipCode: "07007000", phone: "11999999997" },
+  { cpf: "82136749528", name: "Elisa Carvalho", mail: "elisa@gmail.com", address: "Rua das Acácias, 147", zipCode: "08008000", phone: "11999999998" },
+  { cpf: "98574016276", name: "Thomas Lima", mail: "thomas@gmail.com", address: "Rua dos Pinheiros, 258", zipCode: "09009000", phone: "11999999999" },
+  { cpf: "85391724619", name: "Pietro Freitas", mail: "pietro@gmail.com", address: "Av. das Nações, 369", zipCode: "10010000", phone: "11999999900" }
+]);
+
+db.products.insertMany([
+  { name: "Camiseta Repellat", model: "M001", manufacturer: "FutureThreads", color: "gray", size: "p", price: 49.99 },
+  { name: "Camiseta Nesciunt", model: "M002", manufacturer: "QuantumWear", color: "black", size: "xxl", price: 39.90 },
+  { name: "Camiseta Eos", model: "M003", manufacturer: "UrbanFlex", color: "gray", size: "xl", price: 44.90 },
+  { name: "Camiseta Omnis", model: "M004", manufacturer: "AlphaStyle", color: "white", size: "p", price: 50.50 },
+  { name: "Camiseta Enim", model: "M005", manufacturer: "FlexiWear", color: "black", size: "p", price: 58.00 },
+  { name: "Camiseta Mollitia", model: "M006", manufacturer: "FutureThreads", color: "black", size: "m", price: 42.70 },
+  { name: "Camiseta Commodi", model: "M007", manufacturer: "NeoCloth", color: "gray", size: "p", price: 29.90 },
+  { name: "Camiseta Consequatur", model: "M008", manufacturer: "EvoWear", color: "black", size: "xxl", price: 35.20 },
+  { name: "Camiseta Quidem", model: "M009", manufacturer: "QuantumWear", color: "gray", size: "p", price: 38.10 },
+  { name: "Camiseta Natus", model: "M010", manufacturer: "ClassicLine", color: "white", size: "xl", price: 60.00 }
+]);
+
+db.orders.insertMany([
+  {
+    clientCpf: "40761839593",
+    address: "Rua A, 100",
+    zipCode: "01001000",
+    totalValue: 49.99,
+    items: [{ productModel: "M001", productName: "Camiseta Repellat", manufacturer: "FutureThreads", color: "gray", size: "p", price: 49.99, quantity: 1 }]
+  },
+  {
+    clientCpf: "20765134934",
+    address: "Rua B, 200",
+    zipCode: "02002000",
+    totalValue: 39.90,
+    items: [{ productModel: "M002", productName: "Camiseta Nesciunt", manufacturer: "QuantumWear", color: "black", size: "xxl", price: 39.90, quantity: 1 }]
+  },
+  {
+    clientCpf: "54096782300",
+    address: "Rua C, 300",
+    zipCode: "03003000",
+    totalValue: 44.90,
+    items: [{ productModel: "M003", productName: "Camiseta Eos", manufacturer: "UrbanFlex", color: "gray", size: "xl", price: 44.90, quantity: 1 }]
+  },
+  {
+    clientCpf: "75480316966",
+    address: "Rua D, 400",
+    zipCode: "04004000",
+    totalValue: 100.49,
+    items: [
+      { productModel: "M001", productName: "Camiseta Repellat", manufacturer: "FutureThreads", color: "gray", size: "p", price: 49.99, quantity: 1 },
+      { productModel: "M004", productName: "Camiseta Omnis", manufacturer: "AlphaStyle", color: "white", size: "p", price: 50.50, quantity: 1 }
+    ]
+  },
+  {
+    clientCpf: "96245731070",
+    address: "Rua E, 500",
+    zipCode: "05005000",
+    totalValue: 58.00,
+    items: [{ productModel: "M005", productName: "Camiseta Enim", manufacturer: "FlexiWear", color: "black", size: "p", price: 58.00, quantity: 1 }]
+  },
+  {
+    clientCpf: "81395720479",
+    address: "Rua F, 600",
+    zipCode: "06006000",
+    totalValue: 42.70,
+    items: [{ productModel: "M006", productName: "Camiseta Mollitia", manufacturer: "FutureThreads", color: "black", size: "m", price: 42.70, quantity: 1 }]
+  },
+  {
+    clientCpf: "79605132443",
+    address: "Rua G, 700",
+    zipCode: "07007000",
+    totalValue: 29.90,
+    items: [{ productModel: "M007", productName: "Camiseta Commodi", manufacturer: "NeoCloth", color: "gray", size: "p", price: 29.90, quantity: 1 }]
+  },
+  {
+    clientCpf: "82136749528",
+    address: "Rua H, 800",
+    zipCode: "08008000",
+    totalValue: 70.10,
+    items: [
+      { productModel: "M008", productName: "Camiseta Consequatur", manufacturer: "EvoWear", color: "black", size: "xxl", price: 35.20, quantity: 1 },
+      { productModel: "M009", productName: "Camiseta Quidem", manufacturer: "QuantumWear", color: "gray", size: "p", price: 38.10, quantity: 1 }
+    ]
+  },
+  {
+    clientCpf: "98574016276",
+    address: "Rua I, 900",
+    zipCode: "09009000",
+    totalValue: 139.80,
+    items: [
+      { productModel: "M002", productName: "Camiseta Nesciunt", manufacturer: "QuantumWear", color: "black", size: "xxl", price: 39.90, quantity: 2 },
+      { productModel: "M010", productName: "Camiseta Natus", manufacturer: "ClassicLine", color: "white", size: "xl", price: 60.00, quantity: 1 }
+    ]
+  },
+  {
+    clientCpf: "85391724619",
+    address: "Rua J, 1000",
+    zipCode: "10010000",
+    totalValue: 38.10,
+    items: [{ productModel: "M009", productName: "Camiseta Quidem", manufacturer: "QuantumWear", color: "gray", size: "p", price: 38.10, quantity: 1 }]
+  }
+]);
+
+######################################
+####### PARTE 3 -  SCRIPT  ###########
+######################################
+
+-- Sair do banco
+exit;
+
+-- se nao estiver utilizando a imagem da aula e sim a da comunidade do mongo
+apt update
+apt install nano
+
+nano /tmp/clients.csv
+cpf,name,mail,address,zipCode,phone
+22578218863,João Silva,joão@email.com,"Rua A, 100",10000000,11994718158
+18972711155,Maria Souza,maria@email.com,"Rua B, 101",10000100,11996561045
+96436072333,Carlos Lima,carlos@email.com,"Rua C, 102",10000200,11997729730
+30481579508,Ana Rocha,ana@email.com,"Rua D, 103",10000300,11999804375
+36907632866,Paulo Reis,paulo@email.com,"Rua E, 104",10000400,11993958496
+89277281149,Juliana Alves,juliana@email.com,"Rua F, 105",10000500,11999950681
+58012526518,Bruno Costa,bruno@email.com,"Rua G, 106",10000600,11991131451
+81849907267,Fernanda Dias,fernanda@email.com,"Rua H, 107",10000700,11994716214
+22817056956,Rafael Gomes,rafael@email.com,"Rua I, 108",10000800,11997504022
+73083846896,Larissa Pinto,larissa@email.com,"Rua J, 109",10000900,11992407501
+79017152293,Lucas Martins,lucas@email.com,"Rua K, 110",10001000,11997292585
+47757162466,Beatriz Fernandes,beatriz@email.com,"Rua L, 111",10001100,11998532603
+77527242072,Gustavo Ramos,gustavo@email.com,"Rua M, 112",10001200,11998994710
+64178112566,Amanda Vieira,amanda@email.com,"Rua N, 113",10001300,11992746236
+81792618415,Felipe Barbosa,felipe@email.com,"Rua O, 114",10001400,11997420392
+48856042758,Camila Castro,camila@email.com,"Rua P, 115",10001500,11991758585
+88898807991,Thiago Pires,thiago@email.com,"Rua Q, 116",10001600,11993435859
+38046863481,Vanessa Cardoso,vanessa@email.com,"Rua R, 117",10001700,11994127823
+74837465274,Renato Duarte,renato@email.com,"Rua S, 118",10001800,11994763273
+57643204205,Patrícia Lopes,patrícia@email.com,"Rua T, 119",10001900,11998242645
+
+nano /tmp/products.csv
+name,model,manufacturer,color,size,price
+Camiseta Básica,M100,QuantumWear,gray,p,78.2
+Camiseta Estampada,M101,QuantumWear,gray,p,106.7
+Camiseta Polo,M102,QuantumWear,white,p,82.27
+Camiseta Regata,M103,QuantumWear,black,m,92.93
+Camiseta Manga Longa,M104,QuantumWear,white,m,114.54
+Camiseta Tech,M105,QuantumWear,black,g,117.13
+Camiseta Oversized,M106,QuantumWear,white,p,87.51
+Camiseta Slim Fit,M107,QuantumWear,white,m,99.66
+Camiseta Casual,M108,QuantumWear,gray,m,85.75
+Camiseta Esportiva,M109,QuantumWear,gray,p,83.63
+Camiseta V-Neck,M110,QuantumWear,gray,m,81.9
+Camiseta Térmica,M111,QuantumWear,gray,p,80.35
+Camiseta Street,M112,QuantumWear,black,p,52.34
+Camiseta Lifestyle,M113,QuantumWear,gray,p,129.88
+Camiseta DryFit,M114,QuantumWear,white,p,76.0
+Camiseta Comfy,M115,QuantumWear,black,g,108.49
+Camiseta Urban,M116,QuantumWear,gray,m,73.13
+Camiseta Pocket,M117,QuantumWear,gray,m,69.66
+Camiseta Neon,M118,QuantumWear,white,p,77.73
+Camiseta Vintage,M119,QuantumWear,black,p,65.73
+
+mongoimport --db black_white_gray_store --collection clients --type csv --headerline --file /tmp/clients.csv;
+mongoimport --db black_white_gray_store --collection products --type csv --headerline --file /tmp/products.csv;
+
+mongosh;
+
+use black_white_gray_store;
+
+db.clients.find();
+db.products.find();
