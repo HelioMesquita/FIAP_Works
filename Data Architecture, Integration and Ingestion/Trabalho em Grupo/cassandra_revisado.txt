@@ -9,13 +9,13 @@
 ########## PARTE 1 - CRIAÇÃO #########
 ######################################
 
-cassandra -R
+cassandra -R;
 
 cqlsh;
 
 -- Criação do keyspace
-CREATE KEYSPACE IF NOT EXISTS black_white_gray_store WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-USE black_white_gray_store;
+CREATE KEYSPACE IF NOT EXISTS shoes_store WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+USE shoes_store;
 
 CREATE TABLE IF NOT EXISTS clients (
     cpf text PRIMARY KEY,
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS products (
     model text PRIMARY KEY,
     name text,
     manufacturer text,
-    color text,
-    size text,
+    colors list<text>,
+    size list<text>,
     price decimal
 );
 
@@ -73,82 +73,111 @@ INSERT INTO clients (cpf, name, mail, address, zip_code, phone) VALUES ('9857401
 INSERT INTO clients (cpf, name, mail, address, zip_code, phone) VALUES ('85391724619', 'Pietro Freitas', 'pietro@gmail.com', 'Av. das Nações, 369', '10010000', '11999999900');
 
 
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M001', 'Camiseta Repellat', 'FutureThreads', 'gray', 'p', 49.99);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M002', 'Camiseta Nesciunt', 'QuantumWear', 'black', 'xxl', 39.90);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M003', 'Camiseta Eos', 'UrbanFlex', 'gray', 'xl', 44.90);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M004', 'Camiseta Omnis', 'AlphaStyle', 'white', 'p', 50.50);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M005', 'Camiseta Enim', 'FlexiWear', 'black', 'p', 58.00);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M006', 'Camiseta Mollitia', 'FutureThreads', 'black', 'm', 42.70);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M007', 'Camiseta Commodi', 'NeoCloth', 'gray', 'p', 29.90);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M008', 'Camiseta Consequatur', 'EvoWear', 'black', 'xxl', 35.20);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M009', 'Camiseta Quidem', 'QuantumWear', 'gray', 'p', 38.10);
-INSERT INTO products (model, name, manufacturer, color, size, price) VALUES ('M010', 'Camiseta Natus', 'ClassicLine', 'white', 'xl', 60.00);
+-- Produtos: sapatos com preços mais realistas
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M001', 'Tênis Alpha Run', 'FutureShoes', ['gray', 'black'], ['37', '38', '39', '40'], 249.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M002', 'Sapatênis Comfort Pro', 'QuantumShoes', ['black', 'brown'], ['42', '43', '44'], 219.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M003', 'Bota Explorer', 'UrbanWalk', ['brown', 'black'], ['40', '41', '42'], 329.00);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M004', 'Scarpin Clássico', 'AlphaStyle', ['beige', 'red'], ['35', '36', '37'], 199.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M005', 'Tênis Urban Track', 'FlexiStep', ['black', 'white'], ['38', '39', '40'], 289.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M006', 'Mocassim Elegance', 'FutureShoes', ['navy', 'gray'], ['40', '41', '42'], 189.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M007', 'Sandália Leve', 'NeoStep', ['gray', 'blue'], ['36', '37', '38'], 119.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M008', 'Chinelo Conforto', 'EvoStep', ['black', 'green'], ['41', '42', '43'], 109.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M009', 'Sapatilha Casual', 'QuantumShoes', ['pink', 'white'], ['34', '35', '36'], 139.90);
+
+INSERT INTO products (model, name, manufacturer, colors, size, price) 
+VALUES ('M010', 'Bota Adventure', 'ClassicBoots', ['camel', 'black'], ['41', '42', '43'], 399.90);
 
 
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('40761839593', 11111111-1111-1111-1111-111111111111, '2024-06-18 10:00:00', 'Rua A, 100', '01001000', 49.99);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('20765134934', 22222222-2222-2222-2222-222222222222, '2024-06-18 11:00:00', 'Rua B, 200', '02002000', 39.90);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('54096782300', 33333333-3333-3333-3333-333333333333, '2024-06-18 12:00:00', 'Rua C, 300', '03003000', 44.90);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('75480316966', 44444444-4444-4444-4444-444444444444, '2024-06-18 13:00:00', 'Rua D, 400', '04004000', 100.49);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('96245731070', 55555555-5555-5555-5555-555555555555, '2024-06-18 14:00:00', 'Rua E, 500', '05005000', 58.00);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('81395720479', 66666666-6666-6666-6666-666666666666, '2024-06-18 15:00:00', 'Rua F, 600', '06006000', 42.70);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('79605132443', 77777777-7777-7777-7777-777777777777, '2024-06-18 16:00:00', 'Rua G, 700', '07007000', 29.90);
-
-INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('82136749528', 88888888-8888-8888-8888-888888888888, '2024-06-18 17:00:00', 'Rua H, 800', '08008000', 70.10);
 
 INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('98574016276', 99999999-9999-9999-9999-999999999999, '2024-06-18 18:00:00', 'Rua I, 900', '09009000', 139.80);
+('40761839593', 11111111-1111-1111-1111-111111111111, '2024-06-18 10:00:00', 'Rua A, 100', '01001000', 249.90);
 
 INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
-('85391724619', aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa, '2024-06-18 19:00:00', 'Rua J, 1000', '10010000', 38.10);
+('20765134934', 22222222-2222-2222-2222-222222222222, '2024-06-18 11:00:00', 'Rua B, 200', '02002000', 219.90);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('54096782300', 33333333-3333-3333-3333-333333333333, '2024-06-18 12:00:00', 'Rua C, 300', '03003000', 329.00);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('75480316966', 44444444-4444-4444-4444-444444444444, '2024-06-18 13:00:00', 'Rua D, 400', '04004000', 449.80);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('96245731070', 55555555-5555-5555-5555-555555555555, '2024-06-18 14:00:00', 'Rua E, 500', '05005000', 289.90);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('81395720479', 66666666-6666-6666-6666-666666666666, '2024-06-18 15:00:00', 'Rua F, 600', '06006000', 189.90);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('79605132443', 77777777-7777-7777-7777-777777777777, '2024-06-18 16:00:00', 'Rua G, 700', '07007000', 119.90);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('82136749528', 88888888-8888-8888-8888-888888888888, '2024-06-18 17:00:00', 'Rua H, 800', '08008000', 249.80);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('98574016276', 99999999-9999-9999-9999-999999999999, '2024-06-18 18:00:00', 'Rua I, 900', '09009000', 579.80);
+
+INSERT INTO orders_by_client (client_cpf, order_id, order_date, address, zip_code, total_value) VALUES 
+('85391724619', aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa, '2024-06-18 19:00:00', 'Rua J, 1000', '10010000', 139.90);
 
 
-INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(11111111-1111-1111-1111-111111111111, 'M001', 'Camiseta Repellat', 'FutureThreads', 'gray', 'p', 49.99, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(22222222-2222-2222-2222-222222222222, 'M002', 'Camiseta Nesciunt', 'QuantumWear', 'black', 'xxl', 39.90, 1);
+(11111111-1111-1111-1111-111111111111, 'M001', 'Tênis Alpha Run', 'FutureShoes', 'gray', '38', 249.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(33333333-3333-3333-3333-333333333333, 'M003', 'Camiseta Eos', 'UrbanFlex', 'gray', 'xl', 44.90, 1);
+(22222222-2222-2222-2222-222222222222, 'M002', 'Sapatênis Comfort Pro', 'QuantumShoes', 'black', '42', 219.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(44444444-4444-4444-4444-444444444444, 'M001', 'Camiseta Repellat', 'FutureThreads', 'gray', 'p', 49.99, 1);
-INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(44444444-4444-4444-4444-444444444444, 'M004', 'Camiseta Omnis', 'AlphaStyle', 'white', 'p', 50.50, 1);
+(33333333-3333-3333-3333-333333333333, 'M003', 'Bota Explorer', 'UrbanWalk', 'black', '41', 329.00, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(55555555-5555-5555-5555-555555555555, 'M005', 'Camiseta Enim', 'FlexiWear', 'black', 'p', 58.00, 1);
+(44444444-4444-4444-4444-444444444444, 'M001', 'Tênis Alpha Run', 'FutureShoes', 'black', '39', 249.90, 1);
+INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
+(44444444-4444-4444-4444-444444444444, 'M004', 'Scarpin Clássico', 'AlphaStyle', 'red', '36', 199.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(66666666-6666-6666-6666-666666666666, 'M006', 'Camiseta Mollitia', 'FutureThreads', 'black', 'm', 42.70, 1);
+(55555555-5555-5555-5555-555555555555, 'M005', 'Tênis Urban Track', 'FlexiStep', 'black', '39', 289.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(77777777-7777-7777-7777-777777777777, 'M007', 'Camiseta Commodi', 'NeoCloth', 'gray', 'p', 29.90, 1);
+(66666666-6666-6666-6666-666666666666, 'M006', 'Mocassim Elegance', 'FutureShoes', 'gray', '41', 189.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(88888888-8888-8888-8888-888888888888, 'M008', 'Camiseta Consequatur', 'EvoWear', 'black', 'xxl', 35.20, 1);
-INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(88888888-8888-8888-8888-888888888888, 'M009', 'Camiseta Quidem', 'QuantumWear', 'gray', 'p', 38.10, 1);
+(77777777-7777-7777-7777-777777777777, 'M007', 'Sandália Leve', 'NeoStep', 'gray', '37', 119.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(99999999-9999-9999-9999-999999999999, 'M002', 'Camiseta Nesciunt', 'QuantumWear', 'black', 'xxl', 39.90, 2);
+(88888888-8888-8888-8888-888888888888, 'M008', 'Chinelo Conforto', 'EvoStep', 'black', '42', 109.90, 1);
+INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
+(88888888-8888-8888-8888-888888888888, 'M009', 'Sapatilha Casual', 'QuantumShoes', 'white', '35', 139.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(99999999-9999-9999-9999-999999999999, 'M010', 'Camiseta Natus', 'ClassicLine', 'white', 'xl', 60.00, 1);
+(99999999-9999-9999-9999-999999999999, 'M002', 'Sapatênis Comfort Pro', 'QuantumShoes', 'brown', '43', 219.90, 1);
 
 INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
-(aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa, 'M009', 'Camiseta Quidem', 'QuantumWear', 'gray', 'p', 38.10, 1);
+(99999999-9999-9999-9999-999999999999, 'M010', 'Bota Adventure', 'ClassicBoots', 'black', '42', 399.90, 1);
+
+INSERT INTO order_items_by_order (order_id, product_model, product_name, manufacturer, color, size, price, quantity) VALUES 
+(aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa, 'M009', 'Sapatilha Casual', 'QuantumShoes', 'pink', '35', 139.90, 1);
+
+
+
+select * from clients;
+select * from products;
+select * from orders_by_client;
+select * from order_items_by_order;
