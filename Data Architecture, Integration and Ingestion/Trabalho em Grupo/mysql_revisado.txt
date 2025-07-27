@@ -188,7 +188,7 @@ INSERT INTO order_items (id, order_id, product_id, color_id, size_id, quantity) 
 select * from sizes;
 select * from colors;
 select * from manufacturers;
-select * from clientes;
+select * from clients;
 select * from products;
 select * from product_colors;
 select * from product_sizes;
